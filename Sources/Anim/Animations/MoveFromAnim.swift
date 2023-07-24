@@ -10,6 +10,7 @@ public struct MoveFromAnim: Anim {
     }
 
     private let duration: TimeInterval
+    private let options: UIView.AnimationOptions
     private let direction: Direction
     private let offset: CGFloat
     private let reversed: Bool
@@ -18,9 +19,11 @@ public struct MoveFromAnim: Anim {
         duration: TimeInterval = 0.5,
         direction: Direction,
         offset: CGFloat = 50,
+        options: UIView.AnimationOptions = [],
         reversed: Bool = false
     ) {
         self.duration = duration
+        self.options = options
         self.direction = direction
         self.offset = offset
         self.reversed = reversed
@@ -37,11 +40,15 @@ public struct MoveFromAnim: Anim {
 
         let transformFrom = view.transform
         let transformTo = view.transform.concatenating(moveFromAffineTransform)
-        if !reversed {
+        if !self.reversed {
             view.transform = transformTo
         }
 
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: self.duration, delay: 0) {
+        UIViewPropertyAnimator.runningPropertyAnimator(
+            withDuration: self.duration,
+            delay: 0,
+            options: self.options
+        ) {
             view.transform = reversed ? transformTo : transformFrom
         } completion: { _ in
             completion()
@@ -70,40 +77,45 @@ public extension Anim where Self == MoveFromAnim {
         _ duration: TimeInterval = 0.5,
         direction: MoveFromAnim.Direction,
         offset: CGFloat,
+        options: UIView.AnimationOptions = [],
         reversed: Bool = false
     ) -> MoveFromAnim {
-        .init(duration: duration, direction: direction, offset: offset, reversed: reversed)
+        .init(duration: duration, direction: direction, offset: offset, options: options, reversed: reversed)
     }
 
     static func moveFromTop(
         _ duration: TimeInterval = 0.5,
         offset: CGFloat,
+        options: UIView.AnimationOptions = [],
         reversed: Bool = false
     ) -> MoveFromAnim {
-        .init(duration: duration, direction: .top, offset: offset, reversed: reversed)
+        .init(duration: duration, direction: .top, offset: offset, options: options, reversed: reversed)
     }
 
     static func moveFromLeft(
         _ duration: TimeInterval = 0.5,
         offset: CGFloat,
+        options: UIView.AnimationOptions = [],
         reversed: Bool = false
     ) -> MoveFromAnim {
-        .init(duration: duration, direction: .left, offset: offset, reversed: reversed)
+        .init(duration: duration, direction: .left, offset: offset, options: options, reversed: reversed)
     }
 
     static func moveFromBottom(
         _ duration: TimeInterval = 0.5,
         offset: CGFloat,
+        options: UIView.AnimationOptions = [],
         reversed: Bool = false
     ) -> MoveFromAnim {
-        .init(duration: duration, direction: .bottom, offset: offset, reversed: reversed)
+        .init(duration: duration, direction: .bottom, offset: offset, options: options, reversed: reversed)
     }
 
     static func moveFromRight(
         _ duration: TimeInterval = 0.5,
         offset: CGFloat,
+        options: UIView.AnimationOptions = [],
         reversed: Bool = false
     ) -> MoveFromAnim {
-        .init(duration: duration, direction: .right, offset: offset, reversed: reversed)
+        .init(duration: duration, direction: .right, offset: offset, options: options, reversed: reversed)
     }
 }
