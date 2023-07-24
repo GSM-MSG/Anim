@@ -5,10 +5,17 @@ public struct RotateAnim: Anim {
     private let duration: TimeInterval
     private let angle: CGFloat
     private let reversed: Bool
+    private let options: UIView.AnimationOptions
 
-    public init(duration: TimeInterval = 0.4, angle: CGFloat, reversed: Bool = false) {
+    public init(
+        duration: TimeInterval = 0.4,
+        angle: CGFloat,
+        options: UIView.AnimationOptions = [],
+        reversed: Bool = false
+    ) {
         self.duration = duration
         self.angle = angle
+        self.options = options
         self.reversed = reversed
     }
 
@@ -17,12 +24,16 @@ public struct RotateAnim: Anim {
 
         let transformFrom = view.transform
         let transformTo = view.transform.concatenating(rotateAffineTransform)
-        if !reversed {
+        if !self.reversed {
             view.transform = transformTo
         }
 
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: self.duration, delay: 0) {
-            view.transform = reversed ? transformTo : transformFrom
+        UIViewPropertyAnimator.runningPropertyAnimator(
+            withDuration: self.duration,
+            delay: 0,
+            options: self.options
+        ) {
+            view.transform = self.reversed ? transformTo : transformFrom
         } completion: { _ in
             completion()
         }
@@ -33,8 +44,9 @@ public extension Anim where Self == RotateAnim {
     static func rotate(
         _ duration: TimeInterval = 0.5,
         angle: CGFloat,
+        options: UIView.AnimationOptions = [],
         reversed: Bool = false
     ) -> RotateAnim {
-        RotateAnim(duration: duration, angle: angle, reversed: reversed)
+        RotateAnim(duration: duration, angle: angle, options: options, reversed: reversed)
     }
 }

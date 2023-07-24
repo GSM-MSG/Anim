@@ -4,10 +4,12 @@ import UIKit
 public struct OpacityAnim: Anim {
     private let duration: TimeInterval
     private let opacity: CGFloat
+    private let options: UIView.AnimationOptions
 
-    public init(duration: TimeInterval = 0.25, opacity: CGFloat) {
+    public init(duration: TimeInterval = 0.5, opacity: CGFloat, options: UIView.AnimationOptions) {
         self.duration = duration
         self.opacity = opacity
+        self.options = options
     }
 
     public func animate(view: UIView, completion: @escaping () -> Void) {
@@ -20,7 +22,11 @@ public struct OpacityAnim: Anim {
 }
 
 public extension Anim where Self == OpacityAnim {
-    static func opacity(_ duration: TimeInterval = 0.5, opacity: CGFloat) -> OpacityAnim {
-        OpacityAnim(duration: duration, opacity: opacity)
+    static func opacity(
+        _ duration: TimeInterval = 0.5,
+        opacity: CGFloat,
+        options: UIView.AnimationOptions = []
+    ) -> OpacityAnim {
+        OpacityAnim(duration: duration, opacity: opacity, options: options)
     }
 }
